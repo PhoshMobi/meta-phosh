@@ -1,5 +1,9 @@
 meta-phosh
 ==========
 
-There's often issues that affect multiple components of the mobile stack. Let's
-track them here.
+This repository contains config shared between different projects related to
+[Phosh][].
+
+We also track isuses that affect multiple components in this repo.
+
+[Phosh]: https://phosh.mobi/
