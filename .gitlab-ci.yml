@@ -1,0 +1,33 @@
+include:
+  - '/ci/phosh-common-jobs.yml'
+  - remote: 'https://gitlab.freedesktop.org/freedesktop/ci-templates/-/raw/d03cddbcff35f26861429fc816c00323f48e99af/templates/ci-fairy.yml'
+
+check:
+  image: debian:trixie
+  variables:
+    PHOSH_ADDITIONAL_PKGS: make flake8 pycodestyle shellcheck
+  script:
+    # setup
+    # flake8 is broken in trixie, use the one from sid for the moment
+    - echo "deb http://deb.debian.org/debian/ sid main" >> /etc/apt/sources.list.d/sid.list
+    - !reference [.phosh-prepare-apt]
+    - make
+
+variables:
+  # For ci-fairy
+  FDO_UPSTREAM_REPO: guidog/meta-phosh
+
+# Sanity checks of MR settings and commit logs
+commit-log-check:
+  extends:
+    - .fdo.ci-fairy
+  variables:
+    GIT_DEPTH: "100"
+  needs: []
+  script: |
+    ci-fairy check-commits --junit-xml=commit-message-junit-report.xml
+  artifacts:
+    reports:
+      junit: commit-message-junit-report.xml
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $CI_DEFAULT_BRANCH'
