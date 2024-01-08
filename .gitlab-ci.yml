@@ -1,0 +1,12 @@
+include: '/ci/phosh-common-jobs.yml'
+
+check:
+  image: debian:trixie
+  variables:
+    PHOSH_ADDITIONAL_PKGS: make flake8 shellcheck
+  script:
+    # setup
+    # flake8 is broken in trixie, use the one from sid for the moment
+    - echo "deb http://deb.debian.org/debian/ sid main" >> /etc/apt/sources.list.d/sid.list
+    - !reference [.phosh-prepare-apt]
+    - make
