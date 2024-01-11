@@ -2,8 +2,14 @@ include:
   - '/ci/phosh-common-jobs.yml'
   - remote: 'https://gitlab.freedesktop.org/freedesktop/ci-templates/-/raw/d03cddbcff35f26861429fc816c00323f48e99af/templates/ci-fairy.yml'
 
-check:
+stages:
+ - scripts
+ - format
+
+check-scripts:
   image: debian:trixie
+  stage: scripts
+  needs: []
   variables:
     PHOSH_ADDITIONAL_PKGS: make flake8 pycodestyle shellcheck
   script:
@@ -13,12 +19,23 @@ check:
     - !reference [.phosh-prepare-apt]
     - make
 
+check-uncrustify:
+  image: debian:trixie
+  stage: format
+  needs: []
+  variables:
+    PHOSH_ADDITIONAL_PKGS: make uncrustify
+  script:
+    - !reference [.phosh-prepare-apt]
+    - make check-uncrustify
+
 variables:
   # For ci-fairy
   FDO_UPSTREAM_REPO: guidog/meta-phosh
 
 # Sanity checks of MR settings and commit logs
 commit-log-check:
+  stage: format
   extends:
     - .fdo.ci-fairy
   variables:
