@@ -9,3 +9,6 @@ SHELL_SCRIPTS = \
 all:
 	flake8 $(PYTHON_SCRIPTS)
 	shellcheck $(SHELL_SCRIPTS)
+
+check-uncrustify:
+	uncrustify --check -c ci/gitlab-ci/uncrustify.cfg tests/uncrustify.c
