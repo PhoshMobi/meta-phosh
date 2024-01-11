@@ -65,3 +65,20 @@ check_goto (void)
  label:
   return TRUE;
 }
+
+
+void
+check_switch (GObject      *object,
+              guint         property_id,
+              const GValue *value,
+              GParamSpec   *pspec)
+{
+  switch (property_id) {
+  case PROP_ACTIVE:
+    phosh_quick_setting_set_active (self, g_value_get_boolean (value));
+    break;
+  default:
+    G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+    break;
+  }
+}
