@@ -4,14 +4,22 @@
  * uncrustify -c ci/gitlab-ci/uncrustify.cfg
  */
 
-
-typedef struct {
+/* Minimal indent should stay as is */
+typedef struct _FooType {
   int       something;
   MpObject  else_;
 
   MpObject *else2;
-};
+} FooType;
 
+/* Don't overalign */
+typedef struct _FooType2 {
+  Foo child;
+
+  SomethingElse          whatever;
+  const somethinglong   *a;
+  const somethinglonger *b;
+} FooType2;
 
 
 void
