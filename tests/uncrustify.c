@@ -13,11 +13,17 @@ typedef struct {
 };
 
 
+
 void
 check_vars (void)
 {
   g_autofree char *str = NULL;
   g_autoptr (GObject) object = NULL;
+  int a;
+
+  a = 3 + 4;
+  a += -3;
+  a %= *str;
 }
 
 
