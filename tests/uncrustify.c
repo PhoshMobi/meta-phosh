@@ -96,3 +96,11 @@ check_switch (GObject      *object,
     break;
   }
 }
+
+
+static void
+check_i18n ()
+{
+  _("Foo");
+  N_("Bar");
+}
