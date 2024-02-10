@@ -4,13 +4,22 @@
  * uncrustify -c ci/gitlab-ci/uncrustify.cfg
  */
 
-
-typedef struct {
+/* Minimal indent should stay as is */
+typedef struct _FooType {
   int       something;
   MpObject  else_;
 
   MpObject *else2;
-};
+} FooType;
+
+/* Don't overalign */
+typedef struct _FooType2 {
+  Foo child;
+
+  SomethingElse          whatever;
+  const somethinglong   *a;
+  const somethinglonger *b;
+} FooType2;
 
 
 void
@@ -18,6 +27,11 @@ check_vars (void)
 {
   g_autofree char *str = NULL;
   g_autoptr (GObject) object = NULL;
+  int a;
+
+  a = 3 + 4;
+  a += -3;
+  a %= *str;
 }
 
 
@@ -81,4 +95,12 @@ check_switch (GObject      *object,
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
     break;
   }
+}
+
+
+static void
+check_i18n ()
+{
+  _("Foo");
+  N_("Bar");
 }
