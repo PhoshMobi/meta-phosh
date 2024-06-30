@@ -46,6 +46,21 @@ variables:
     - !reference [.phosh-prepare-apt]
     - .gitlab-ci/check-po
 
+.phosh-check-consistency:
+  image: ${PHOSH_DOCKER_IMAGE}
+  variables:
+    PHOSH_ADDITIONAL_PKGS: dpkg-dev
+  needs: []
+  script:
+    - !reference [.phosh-prepare-apt]
+    - .gitlab-ci/check-consistency
+  only:
+    changes:
+      - NEWS
+      - meson.build
+      - debian/changelog
+      - data/*.metainfo.xml.in*
+
 .phosh-format-check:
   image: ${PHOSH_DOCKER_IMAGE}
   needs: []
