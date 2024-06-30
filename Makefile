@@ -4,6 +4,7 @@ PYTHON_SCRIPTS = \
 
 SHELL_SCRIPTS = \
 	ci/gitlab-ci/check-po \
+	ci/gitlab-ci/check-consistency \
 	$(NULL)
 
 all:
