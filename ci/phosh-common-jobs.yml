@@ -54,12 +54,14 @@ variables:
   script:
     - !reference [.phosh-prepare-apt]
     - .gitlab-ci/check-consistency
-  only:
-    changes:
-      - NEWS
-      - meson.build
-      - debian/changelog
-      - data/*.metainfo.xml.in*
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        paths:
+          - NEWS
+          - meson.build
+          - debian/changelog
+          - data/*.metainfo.xml.in*
 
 .phosh-format-check:
   image: ${PHOSH_DOCKER_IMAGE}
