@@ -1,10 +1,15 @@
 PYTHON_SCRIPTS = \
 	ci/gitlab-ci/check-style.py \
+	release-helpers/announce-string-freeze \
 	$(NULL)	
 
 SHELL_SCRIPTS = \
 	ci/gitlab-ci/check-po \
 	ci/gitlab-ci/check-consistency \
+        release-helpers/contributors \
+        release-helpers/get-closed-bugs \
+        release-helpers/prep-rc \
+        release-helpers/update-ci \
 	$(NULL)
 
 all:

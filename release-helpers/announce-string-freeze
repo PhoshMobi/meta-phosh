@@ -1,0 +1,46 @@
+#!/usr/bin/python3
+#
+# Copyright (C) 2024 The Phosh developers
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Author: Guido Günther <agx@sigxcpu.org>
+#
+# Create the announcement text for
+# https://discourse.gnome.org/
+#
+# It should be put in the application category with an i18n tag
+# TODO: There's also an API: https://docs.discourse.org/
+
+import sys
+import argparse
+import datetime
+
+
+def main(argv):
+    parser = argparse.ArgumentParser(description="""Announce string freeze""")
+    parser.add_argument(
+        "release", action="store", help="The version of the release, e.g. 0.40.0"
+    )
+    parser.add_argument("release_date", action="store", help="The planned release date")
+    args = parser.parse_args(argv[1:])
+
+    tomorrow = datetime.date.today() + datetime.timedelta(days=1)
+    parts = args.release.split(".")
+    prev = int(parts[1]) - 1
+    prev_release = f"{parts[0]}.{prev}.{parts[2]}"
+
+    print(
+        f"""
+Upcoming phosh {args.release} release
+
+We’re entering string freeze for the next phosh release tomorrow ({tomorrow}). The release is planned for {args.release_date}. This affects
+
+- [phosh](https://gitlab.gnome.org/World/Phosh/phosh)
+- [phosh-mobile-settings](https://gitlab.gnome.org/World/Phosh/phosh-mobile-settings)
+
+Thanks a lot for the translations in {prev_release}!
+"""
+    )
+
+
+if __name__ == "__main__":
+    main(sys.argv)

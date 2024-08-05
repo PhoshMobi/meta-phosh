@@ -1,0 +1,36 @@
+#!/bin/sh
+#
+# Copyright (C) 2024 The Phosh developers
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Author: Guido Günther <agx@sigxcpu.org>
+#
+# This was is initially based on a script from GNOMEs wiki to get the
+# translators.
+
+set -e
+
+if [ -n "$1" ]; then
+  FROM="$1"
+else
+  FROM="$(git tag -l | grep 'v' | sort -V | tail -1)"
+fi
+
+if [ -n "$2" ]; then
+  TO="$2"
+else
+  TO=HEAD
+fi
+
+RANGE="${FROM}..${TO}"
+
+echo "Updating ${RANGE}" 1>&2
+
+if [ "$(git log "${RANGE}" -- . ':(exclude)po/')" != '' ]; then
+  echo "* Contributors:"
+  git log "${RANGE}" --pretty=format:"    * %an" --name-only  -- . ':(exclude)po/' | grep '^[[:space:]]\+' | sort | uniq
+fi
+
+if [ "$(git log "${RANGE}" -- po/*.po)" != '' ]; then 
+  echo "* UI translations:"
+  git log "${RANGE}" --pretty=format:%an --name-only  -- po/*.po | sed -e :a -e '$!N;s|\npo/\(.*\)\.po| \(\1\)|;ta' | sort -u | sed '$!N;s/^\n//' | sed 's/^/    * /'
+fi

@@ -1,0 +1,79 @@
+#!/bin/bash
+#
+# Copyright (C) 2024 The Phosh developers
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Author: Guido Günther <agx@sigxcpu.org>
+#
+# Prepare a branch to open a release candidate MR
+#
+# TODO: Actually open the MR after editing NEWS
+# TODO: Modify metainfo too
+
+set -e
+
+TOOLSDIR=$(dirname "$(realpath "$0")")
+
+if [ -z "$1" ]; then
+   echo "Need a version number"
+   exit 1
+fi
+
+VERSION=$1
+if ! [[ "$VERSION" =~ "~rc" ]]; then
+   echo "$VERSION is not a rc version number"
+   exit 1
+fi
+
+UNDERSCORE_VERSION="${VERSION//\~/_}"
+
+function do_branch()
+{
+  local name="rel-$1"
+
+  git checkout main
+  git pull --ff-only
+  git co -b "${name}"
+}
+
+function update_news()
+{
+  CONTRIBUTORS=$("$TOOLSDIR"/contributors)
+  ISSUES_FIXED=$("$TOOLSDIR"/get-closed-bugs)
+  DATE=$(date +"%B %Y")
+  HEADER="$SOURCE $VERSION"
+  LEN="${#HEADER}"
+
+  cat <<EOF >NEWS.new
+$HEADER
+$(printf '%0.s-' $(seq 1 "${LEN}"))
+Released $DATE
+${ISSUES_FIXED}
+${CONTRIBUTORS}
+
+EOF
+  cat NEWS >> NEWS.new
+  mv NEWS.new NEWS
+}
+
+do_branch "$UNDERSCORE_VERSION"
+gbp dch -R -a --new-version="${VERSION}"
+# Fix version added via gbp-dch hook:
+sed -i 's/\(version:.*\)~rc1/\1.rc1/' meson.build
+
+DIST=$(dpkg-parsechangelog -Sdist)
+VERSION=$(dpkg-parsechangelog -Sversion)
+SOURCE=$(dpkg-parsechangelog -Ssource)
+
+if [ "$DIST" = "UNRELEASED" ]; then 
+   echo "DIST can't be UNRELEASED"
+   exit 1
+fi
+
+if grep -qs "^$SOURCE $VERSION\$" NEWS; then
+   echo "Version $VERSION already exists in NEWS file"
+   exit 1
+fi
+
+update_news
+
+git commit -m"treewide: Document changes and release $VERSION" debian/changelog NEWS meson.build
