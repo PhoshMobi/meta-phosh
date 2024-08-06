@@ -59,7 +59,7 @@ fi
 echo "I: Checking for '${VERSION}'"
 
 # News
-if ! head -1 NEWS | grep -qs "$VERSION\$"; then
+if ! head -1 NEWS | grep -E -qs "\s+${VERSION}\s*$"; then
     log error "E: Version ${VERSION} not in NEWS file"
     exit 1
 else
