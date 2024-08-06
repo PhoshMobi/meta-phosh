@@ -88,8 +88,8 @@ fi
 
 if ! grep -qs "$MESON_VERSION\"" "${METAINFO}"; then
     log error "E: Version ${MESON_VERSION} not in metainfo ${METAINFO}"
-    if [[ "${VERSION}" =~ '~rc' ]]; then
-        log info "I: Release candidate, no metainfo is fine"
+    if [[ "${VERSION}" =~ ~(alpha|beta|rc) ]]; then
+        log info "I: Not a stable release, no metainfo is fine"
     else
         exit 1
     fi
