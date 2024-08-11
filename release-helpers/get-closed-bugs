@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# Copyright (C) 2024 The Phosh developers
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Author: Guido Günther <agx@sigxcpu.org>
+#
+# Get the issues closed in the latest release
+
+set -e
+
+if [ "$(dpkg-parsechangelog | grep Closes:)" != "" ]; then
+  echo "* Issues fixed:"
+  dpkg-parsechangelog | sed -n  's/.*Closes: \(.*\)/    * \1/p'
+fi

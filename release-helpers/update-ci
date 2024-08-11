@@ -1,0 +1,24 @@
+#!/bin/bash
+#
+# Copyright (C) 2024 The Phosh developers
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Author: Guido Günther <agx@sigxcpu.org>
+#
+# Update the shared CI scripts and used jobs to the latest revision
+
+set -e
+
+META_PHOSH_GIT=$(dirname "$(realpath "$0")")/..
+HASH=$({ cd "$META_PHOSH_GIT" ; git log -1 HEAD --format=%H ; })
+SHORT=$({ cd "$META_PHOSH_GIT" ; git log -1 HEAD --format=%h ; })
+
+mkdir -p .gitlab-ci/
+
+echo "Updating to $HASH"
+cp "$META_PHOSH_GIT"/ci/gitlab-ci/* .gitlab-ci/
+
+# Update ref
+sed -i "/project: 'guidog\/meta-phosh'/{n;s/'[0-9a-f]\+'/'$HASH'/}" .gitlab-ci.yml
+
+git add .gitlab-ci/* .gitlab-ci.yml
+git commit -m"ci: Update shared scripts to $SHORT"
