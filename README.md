@@ -4,7 +4,9 @@ meta-phosh
 This repository contains config shared between different projects related to
 [Phosh][].
 
-We also track isuses that affect multiple components in this repo.
+You need to copy the scripts you intend to run in CI into your repo's `.gitlab-ci/`.
+
+We also track issues that affect multiple components in this repo.
 
 gitlab-ci jobs
 --------------

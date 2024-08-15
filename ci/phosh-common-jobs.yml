@@ -84,3 +84,15 @@ variables:
       ./.gitlab-ci/check-style.py --dry-run --sha $merge_base
   rules:
     - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME'
+
+
+.phosh-check-dist:
+  image: ${PHOSH_DOCKER_IMAGE}
+  needs: []
+  script:
+    - !reference [.phosh-prepare-apt]
+    - eatmydata apt-get -y --no-install-recommends install build-essential git devscripts xvfb
+    - eatmydata apt-get -y --no-install-recommends build-dep .
+    - meson setup _build-dist ${MESON_OPTIONS}
+    - xvfb-run meson dist --include-subprojects -C _build-dist ${MESON_DIST_OPTIONS}
+
