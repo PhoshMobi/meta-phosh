@@ -12,7 +12,10 @@ set -e
 if [ -n "$1" ]; then
   FROM="$1"
 else
-  FROM="$(git tag -l | grep 'v' | sort -V | tail -1)"
+  # Help sort -V by making mangling _rc to ~rc …
+  MANGLED="$(git tag -l 'v*' | sed 's,_\(rc\|beta\|alpha\),~\1,' | sort -V | tail -1)"
+  # …and then undo it to get a valid git tag
+  FROM="$(echo "$MANGLED" | sed 's,~\(rc\|beta\|alpha\),_\1,')"
 fi
 
 if [ -n "$2" ]; then
