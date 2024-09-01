@@ -26,7 +26,7 @@ variables:
     - REV=$(git log -1 --format=%h)
     - VER=$(dpkg-parsechangelog -SVersion)
     - '[ -n "$CI_MERGE_REQUEST_TITLE" ] && MSG="Build of \"$CI_MERGE_REQUEST_TITLE\" at $REV" || MSG="Build of $REV"'
-    - 'DEBFULLNAME="CI build" EMAIL="ci-builds@phosh.mobi" dch -v"$VER+librem5ci$CI_PIPELINE_ID.$REV" "$MSG"'
+    - 'DEBFULLNAME="CI build" EMAIL="ci-builds@phosh.mobi" dch -v"$VER+phoshci$CI_PIPELINE_ID.$REV" "$MSG"'
     - dpkg-buildpackage -b -uc -us
     - rm -rf "${PHOSH_PKG_OUTPUT_DIR}"; mkdir -p "${PHOSH_PKG_OUTPUT_DIR}"
     - cp -l ../*.changes ../*.buildinfo "${PHOSH_PKG_OUTPUT_DIR}/"
