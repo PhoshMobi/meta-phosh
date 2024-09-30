@@ -8,7 +8,7 @@ SHELL_SCRIPTS = \
 	ci/gitlab-ci/check-consistency \
         release-helpers/contributors \
         release-helpers/get-closed-bugs \
-        release-helpers/prep-rc \
+        release-helpers/prep-rel-branch \
         release-helpers/update-ci \
 	$(NULL)
 

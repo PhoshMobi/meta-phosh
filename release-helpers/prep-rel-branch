@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Author: Guido Günther <agx@sigxcpu.org>
 #
-# Prepare a branch to open a release candidate MR
+# Prepare a branch to open a merge request
 #
 # TODO: Actually open the MR after editing NEWS
 # TODO: Modify metainfo too
