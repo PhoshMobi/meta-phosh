@@ -1,10 +1,11 @@
+---
 include:
   - '/ci/phosh-common-jobs.yml'
   - remote: 'https://gitlab.freedesktop.org/freedesktop/ci-templates/-/raw/d03cddbcff35f26861429fc816c00323f48e99af/templates/ci-fairy.yml'
 
 stages:
- - scripts
- - format
+  - scripts
+  - format
 
 workflow:
   rules:
