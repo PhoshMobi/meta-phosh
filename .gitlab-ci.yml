@@ -43,6 +43,13 @@ variables:
   # For ci-fairy
   FDO_UPSTREAM_REPO: guidog/meta-phosh
 
+check-markdown:
+  stage: format
+  variables:
+    PHOSH_MARKDOWN_PATHS: "*.md"
+  extends:
+    - .phosh-check-markdown
+
 # Sanity checks of MR settings and commit logs
 commit-log-check:
   stage: format
