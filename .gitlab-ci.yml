@@ -1,10 +1,11 @@
+---
 include:
   - '/ci/phosh-common-jobs.yml'
   - remote: 'https://gitlab.freedesktop.org/freedesktop/ci-templates/-/raw/d03cddbcff35f26861429fc816c00323f48e99af/templates/ci-fairy.yml'
 
 stages:
- - scripts
- - format
+  - scripts
+  - format
 
 workflow:
   rules:
@@ -20,7 +21,7 @@ check-scripts:
   stage: scripts
   needs: []
   variables:
-    PHOSH_ADDITIONAL_PKGS: make flake8 pycodestyle shellcheck
+    PHOSH_ADDITIONAL_PKGS: make flake8 pycodestyle shellcheck yamllint
   script:
     # setup
     # flake8 is broken in trixie, use the one from sid for the moment
@@ -41,6 +42,13 @@ check-uncrustify:
 variables:
   # For ci-fairy
   FDO_UPSTREAM_REPO: guidog/meta-phosh
+
+check-markdown:
+  stage: format
+  variables:
+    PHOSH_MARKDOWN_PATHS: "*.md"
+  extends:
+    - .phosh-check-markdown
 
 # Sanity checks of MR settings and commit logs
 commit-log-check:

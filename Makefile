@@ -12,9 +12,15 @@ SHELL_SCRIPTS = \
         release-helpers/update-ci \
 	$(NULL)
 
+YAML = \
+	.gitlab-ci.yml \
+	ci/phosh-common-jobs.yml \
+	$(NULL)
+
 all:
 	flake8 $(PYTHON_SCRIPTS)
 	shellcheck $(SHELL_SCRIPTS)
+	yamllint $(YAML)
 
 check-uncrustify:
 	uncrustify --check -c ci/gitlab-ci/uncrustify.cfg tests/uncrustify.c

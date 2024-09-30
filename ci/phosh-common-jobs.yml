@@ -1,3 +1,4 @@
+---
 variables:
   # Default image for common jobs
   PHOSH_DOCKER_IMAGE: debian:trixie
@@ -85,7 +86,6 @@ variables:
   rules:
     - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME'
 
-
 .phosh-check-dist:
   image: ${PHOSH_DOCKER_IMAGE}
   needs: []
@@ -96,3 +96,18 @@ variables:
     - meson setup _build-dist ${MESON_OPTIONS}
     - xvfb-run meson dist --include-subprojects -C _build-dist ${MESON_DIST_OPTIONS}
 
+.phosh-check-markdown:
+  image: ${PHOSH_DOCKER_IMAGE}
+  variables:
+    PHOSH_ADDITIONAL_PKGS: markdownlint
+    PHOSH_MARKDOWN_PATHS: "*.md docs/*.md"
+  needs: []
+  script:
+    - !reference [.phosh-prepare-apt]
+    - mdl $PHOSH_MARKDOWN_PATHS
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        paths:
+          - "*.md"
+          - "docs/*.md"
