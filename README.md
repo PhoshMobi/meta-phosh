@@ -1,5 +1,4 @@
-meta-phosh
-==========
+# meta-phosh
 
 This repository contains config shared between different projects related to
 [Phosh][].
@@ -8,8 +7,7 @@ You need to copy the scripts you intend to run in CI into your repo's `.gitlab-c
 
 We also track issues that affect multiple components in this repo.
 
-gitlab-ci jobs
---------------
+## gitlab-ci jobs
 
 Shared gitlab-ci jobs are in [ci/phosh-common-jobs.yml][]. The scripts needed
 for those jobs are expected in the `.gitlab-ci` folder in each project. We copy
