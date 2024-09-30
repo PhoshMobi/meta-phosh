@@ -19,10 +19,6 @@ if [ -z "$1" ]; then
 fi
 
 VERSION=$1
-if ! [[ "$VERSION" =~ "~rc" ]]; then
-   echo "$VERSION is not a rc version number"
-   exit 1
-fi
 
 UNDERSCORE_VERSION="${VERSION//\~/_}"
 
