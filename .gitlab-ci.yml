@@ -21,7 +21,7 @@ check-scripts:
   stage: scripts
   needs: []
   variables:
-    PHOSH_ADDITIONAL_PKGS: make flake8 pycodestyle shellcheck
+    PHOSH_ADDITIONAL_PKGS: make flake8 pycodestyle shellcheck yamllint
   script:
     # setup
     # flake8 is broken in trixie, use the one from sid for the moment

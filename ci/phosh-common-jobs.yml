@@ -1,3 +1,4 @@
+---
 variables:
   # Default image for common jobs
   PHOSH_DOCKER_IMAGE: debian:trixie
