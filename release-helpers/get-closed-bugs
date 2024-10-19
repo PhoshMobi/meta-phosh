@@ -8,7 +8,10 @@
 
 set -e
 
-if [ "$(dpkg-parsechangelog | grep Closes:)" != "" ]; then
+[ -z "$1" ] || VERSION=(--since "$1")
+
+if [ "$(dpkg-parsechangelog "${VERSION[@]}" | grep -E '(Closes|Fixes)':)" != "" ]; then
   echo "* Issues fixed:"
-  dpkg-parsechangelog | sed -n  's/.*Closes: \(.*\)/    * \1/p'
+  dpkg-parsechangelog "${VERSION[@]}" | sed -nE 's/.*(Closes|Fixes): (.*)/    * \2/p'
+
 fi
