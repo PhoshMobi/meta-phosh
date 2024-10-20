@@ -18,8 +18,9 @@ if [ -z "$1" ]; then
    exit 1
 fi
 
-VERSION=$1
+set -u
 
+VERSION="$1"
 UNDERSCORE_VERSION="${VERSION//\~/_}"
 
 function do_branch()
@@ -50,6 +51,11 @@ EOF
   cat NEWS >> NEWS.new
   mv NEWS.new NEWS
 }
+
+if [[ ! "${VERSION}" =~ [0-9]+. ]]; then
+   echo "Version needs to start with a number"
+   exit 1
+fi
 
 do_branch "$UNDERSCORE_VERSION"
 gbp dch -R -a --new-version="${VERSION}"
