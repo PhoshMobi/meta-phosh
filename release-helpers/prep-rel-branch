@@ -18,16 +18,29 @@ if [ -z "$1" ]; then
    exit 1
 fi
 
-set -u
 
-VERSION="$1"
-UNDERSCORE_VERSION="${VERSION//\~/_}"
+function help()
+{
+  cat <<EOF
+
+$0 [-b|--branch branch] VERSION
+
+  Prepare a relase for the given version.
+
+  branch: The base branch to base this release on.
+          Default is main.
+
+EOF
+  exit 0
+}
+
 
 function do_branch()
 {
   local name="rel-$1"
+  local branch="$2"
 
-  git checkout main
+  git checkout "${branch}"
   git pull --ff-only
   git co -b "${name}"
 }
@@ -52,12 +65,34 @@ EOF
   mv NEWS.new NEWS
 }
 
+
+BASE_BRANCH=main
+
+while [ -n "$1" ]; do
+  case "$1" in
+    -h|--help)
+      help
+      ;;
+    -b|--branch)
+      shift
+      BASE_BRANCH="$1"
+      ;;
+    [0-9].*)
+      break;
+      ;;
+  esac
+  shift
+done
+
+VERSION="$1"
+UNDERSCORE_VERSION="${VERSION//\~/_}"
+
 if [[ ! "${VERSION}" =~ [0-9]+. ]]; then
    echo "Version needs to start with a number"
    exit 1
 fi
 
-do_branch "$UNDERSCORE_VERSION"
+do_branch "$UNDERSCORE_VERSION" "${BASE_BRANCH}"
 gbp dch -R -a --new-version="${VERSION}"
 # Fix version added via gbp-dch hook:
 sed -i 's/\(version:.*\)~rc1/\1.rc1/' meson.build
@@ -66,7 +101,7 @@ DIST=$(dpkg-parsechangelog -Sdist)
 VERSION=$(dpkg-parsechangelog -Sversion)
 SOURCE=$(dpkg-parsechangelog -Ssource)
 
-if [ "$DIST" = "UNRELEASED" ]; then 
+if [ "$DIST" = "UNRELEASED" ]; then
    echo "DIST can't be UNRELEASED"
    exit 1
 fi
