@@ -45,6 +45,7 @@ The freeze affects the following components:
 
 - [phosh](https://gitlab.gnome.org/World/Phosh/phosh)
 - [phosh-mobile-settings](https://gitlab.gnome.org/World/Phosh/phosh-mobile-settings)
+- [phosh-tour](https://gitlab.gnome.org/World/Phosh/phosh-tour)
 
 Thanks a lot for the translations in {prev_release}!
 """
