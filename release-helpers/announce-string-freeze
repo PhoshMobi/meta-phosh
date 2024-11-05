@@ -32,7 +32,16 @@ def main(argv):
         f"""
 Upcoming phosh {args.release} release
 
-We’re entering string freeze for the next phosh release tomorrow ({tomorrow}). The release is planned for {args.release_date}. This affects
+We’re entering string freeze tomorrow ({tomorrow}) for the next phosh release.
+
+# Schedule
+
+- Start of string freeze: *{tomorrow}*
+- Planned release date: *{args.release_date}*
+
+# Components
+
+The freeze affects the following components:
 
 - [phosh](https://gitlab.gnome.org/World/Phosh/phosh)
 - [phosh-mobile-settings](https://gitlab.gnome.org/World/Phosh/phosh-mobile-settings)
