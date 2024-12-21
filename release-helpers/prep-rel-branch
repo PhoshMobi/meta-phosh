@@ -95,7 +95,7 @@ fi
 do_branch "$UNDERSCORE_VERSION" "${BASE_BRANCH}"
 gbp dch -R -a --new-version="${VERSION}"
 # Fix version added via gbp-dch hook:
-sed -i 's/\(version:.*\)~rc1/\1.rc1/' meson.build
+sed -i 's/\(version:.*\)~rc\([0-9]\)/\1.rc\2/' meson.build
 
 DIST=$(dpkg-parsechangelog -Sdist)
 VERSION=$(dpkg-parsechangelog -Sversion)
