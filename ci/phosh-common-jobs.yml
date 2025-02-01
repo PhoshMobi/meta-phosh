@@ -111,3 +111,17 @@ variables:
         paths:
           - "*.md"
           - "docs/*.md"
+
+.phosh-check-meson:
+  image: ${PHOSH_DOCKER_IMAGE}
+  variables:
+    PHOSH_ADDITIONAL_PKGS: meson
+  needs: []
+  script:
+    - !reference [.phosh-prepare-apt]
+    - .gitlab-ci/check-meson
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        paths:
+          - "**.build"
