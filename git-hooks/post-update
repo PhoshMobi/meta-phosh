@@ -1,0 +1,37 @@
+#!/bin/bash
+#
+# (c) 2025 The Phosh Developers
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Author: Guido Günther <agx@sigxcpu.org>
+#
+# Build and install the package
+# Add as .git/hooks/post-update
+
+[ "$1" = "refs/heads/next" ] || exit 0
+
+echo "Next branch, updating repo"
+
+export -n GIT_DIR
+
+cd ..
+git checkout -f next
+git status
+
+DEB_BUILD_OPTIONS="nocheck"
+# Generally useful to speed up build
+DEB_BUILD_PROFILES="nodoc nocheck"
+# Minimize phosh build
+DEB_BUILD_PROFILES="$DEB_BUILD_PROFILES pkg.phosh.nolib"
+# Make phoc build more useful for developement
+DEB_BUILD_PROFILES="$DEB_BUILD_PROFILES pkg.phoc.embedwlroots pkg.phoc.sanitizers pkg.phoc.trace"
+
+export DEB_BUILD_PROFILES
+export DEB_BUILD_OPTIONS
+
+dpkg-buildpackage -uc -us -rfakeroot -b
+
+sudo debi
+
+sudo systemctl restart greetd
