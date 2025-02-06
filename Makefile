@@ -4,8 +4,9 @@ PYTHON_SCRIPTS = \
 	$(NULL)	
 
 SHELL_SCRIPTS = \
-	ci/gitlab-ci/check-po \
 	ci/gitlab-ci/check-consistency \
+	ci/gitlab-ci/check-po \
+	ci/gitlab-ci/check-meson \
         release-helpers/contributors \
         release-helpers/get-closed-bugs \
         release-helpers/prep-rel-branch \
