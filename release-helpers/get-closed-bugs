@@ -12,6 +12,6 @@ set -e
 
 if [ "$(dpkg-parsechangelog "${VERSION[@]}" | grep -E '(Closes|Fixes)':)" != "" ]; then
   echo "* Issues fixed:"
-  dpkg-parsechangelog "${VERSION[@]}" | sed -nE 's/.*(Closes|Fixes): (.*)/    * \2/p'
+  dpkg-parsechangelog "${VERSION[@]}" | sed -nE 's/.*(Closes|Fixes): ((https?:|#).*)/    * \2/p'
 
 fi
