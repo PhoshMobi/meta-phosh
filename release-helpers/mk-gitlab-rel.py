@@ -51,6 +51,36 @@ def parse_news(filename, version):
     return news, ui_translations
 
 
+def get_since(version):
+    """
+    Get the previous release version
+
+    >>> get_since("0.1.0")
+    '0.0.0'
+    >>> get_since("0.45.0")
+    '0.44.0'
+    >>> get_since("0.0.6")
+    '0.0.5'
+    >>> get_since("1.0.1")
+    '1.0.0'
+    """
+    # For alpha, beta, etc we don't include any prior releases
+    if '~' in version:
+        return version
+    (major, minor, micro) = [int(x) for x in version.split('.')]
+    # Bug fix releases
+    if (major != 0 or minor != 0) and micro != 0:
+        micro -= 1
+    # New "major releases
+    elif major == 0 and minor == 0:
+        micro -= 1
+    elif major == 0 and micro == 0:
+        minor -= 1
+    elif minor == 0 and micro == 0:
+        major -= 1
+    return f"{major}.{minor}.{micro}"
+
+
 def main(argv):
     parser = argparse.ArgumentParser(os.path.basename(argv[0]),
                                      description='''Make a release''')
@@ -74,7 +104,15 @@ def main(argv):
         print("No project id")
         return 1
 
-    ret, changes = subprocess.getstatusoutput("dpkg-parsechangelog -SChanges")
+    ret, version = subprocess.getstatusoutput("dpkg-parsechangelog -SVersion")
+    if ret:
+        print("Failed to get version from changelog", file=sys.stderr)
+        return 1
+    if version is None:
+        return 1
+
+    since = get_since(version)
+    ret, changes = subprocess.getstatusoutput(f"dpkg-parsechangelog -SChanges --since {since}")
     if ret:
         print("Failed to get debian/changelog changes", file=sys.stderr)
         return 1

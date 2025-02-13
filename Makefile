@@ -19,6 +19,9 @@ YAML = \
 	ci/phosh-common-jobs.yml \
 	$(NULL)
 
+test:
+	pytest
+
 all:
 	flake8 $(PYTHON_SCRIPTS)
 	shellcheck $(SHELL_SCRIPTS)
