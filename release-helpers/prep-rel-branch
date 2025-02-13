@@ -113,4 +113,4 @@ fi
 
 update_news
 
-git commit -m"treewide: Document changes and release $VERSION" debian/changelog NEWS meson.build
+git commit -s -m"treewide: Document changes and release $VERSION" debian/changelog NEWS meson.build
