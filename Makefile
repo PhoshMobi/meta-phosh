@@ -1,6 +1,7 @@
 PYTHON_SCRIPTS = \
 	ci/gitlab-ci/check-style.py \
 	release-helpers/announce-string-freeze \
+	release-helpers/mk-gitlab-rel.py \
 	$(NULL)	
 
 SHELL_SCRIPTS = \
