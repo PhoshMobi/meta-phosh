@@ -1,6 +1,7 @@
 PYTHON_SCRIPTS = \
 	ci/gitlab-ci/check-style.py \
 	release-helpers/announce-string-freeze \
+	release-helpers/mk-gitlab-rel.py \
 	$(NULL)	
 
 SHELL_SCRIPTS = \
@@ -17,6 +18,9 @@ YAML = \
 	.gitlab-ci.yml \
 	ci/phosh-common-jobs.yml \
 	$(NULL)
+
+test:
+	pytest
 
 all:
 	flake8 $(PYTHON_SCRIPTS)

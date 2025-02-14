@@ -21,12 +21,15 @@ check-scripts:
   stage: scripts
   needs: []
   variables:
-    PHOSH_ADDITIONAL_PKGS: make flake8 pycodestyle shellcheck yamllint
+    PHOSH_ADDITIONAL_PKGS: >
+      make flake8 pycodestyle shellcheck yamllint
+      python3-pytest python3-gitlab
   script:
     # setup
     # flake8 is broken in trixie, use the one from sid for the moment
     - echo "deb http://deb.debian.org/debian/ sid main" >> /etc/apt/sources.list.d/sid.list
     - !reference [.phosh-prepare-apt]
+    - make test
     - make
 
 check-uncrustify:
