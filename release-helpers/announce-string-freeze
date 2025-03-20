@@ -43,9 +43,9 @@ We’re entering string freeze tomorrow ({tomorrow}) for the next phosh release.
 
 The freeze affects the following components:
 
-- [phosh](https://gitlab.gnome.org/World/Phosh/phosh)
-- [phosh-mobile-settings](https://gitlab.gnome.org/World/Phosh/phosh-mobile-settings)
-- [phosh-tour](https://gitlab.gnome.org/World/Phosh/phosh-tour)
+- phosh: [repo](https://gitlab.gnome.org/World/Phosh/phosh), [l10n](https://l10n.gnome.org/module/phosh/)
+- phosh-mobile-settings: [repo](https://gitlab.gnome.org/World/Phosh/phosh-mobile-settings), [l10n](https://l10n.gnome.org/module/phosh-mobile-settings/)
+- phosh-tour: [repo](https://gitlab.gnome.org/World/Phosh/phosh-tour), [l10n](https://l10n.gnome.org/module/phosh-tour/)
 
 Thanks a lot for the translations in {prev_release}!
 """
