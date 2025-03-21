@@ -125,3 +125,11 @@ variables:
       changes:
         paths:
           - "**.build"
+
+.phosh-check-repro:
+  image: ${PHOSH_DOCKER_IMAGE}
+  needs: []
+  variables:
+    GIT_DEPTH: "1"
+  script:
+    - meson reprotest --intermediaries -- ${MESON_OPTIONS}
