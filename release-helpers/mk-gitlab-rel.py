@@ -91,6 +91,9 @@ def main(argv):
                         default="https://gitlab.gnome.org",
                         help='The repo id',
                         type=str)
+    parser.add_argument('--tarballs', dest='tarballs',
+                        help='Location of signed release tarballs',
+                        type=str)
     parser.add_argument('--dry-run', action=argparse.BooleanOptionalAction,
                         help="Parse, don't publish")
     args = parser.parse_args(argv[1:])
@@ -168,12 +171,15 @@ Detailed changes
 
     gl = gitlab.Gitlab(args.url, private_token=TOKEN)
     project = gl.projects.get(args.id)
-    project.releases.create(
+    release = project.releases.create(
         {
             'name': name,
             'tag_name': tag,
             'description': message,
         })
+
+    if args.tarballs and len(args.tarballs):
+        release.links.create({"url": args.tarballs, "name": "Signed release tarballs"})
 
     return 0
 
