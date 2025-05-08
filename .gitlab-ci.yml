@@ -53,6 +53,11 @@ check-markdown:
   extends:
     - .phosh-check-markdown
 
+check-meson:
+  stage: format
+  extends:
+    - .phosh-check-meson
+
 # Sanity checks of MR settings and commit logs
 commit-log-check:
   stage: format
