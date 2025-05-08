@@ -21,4 +21,4 @@ cp "$META_PHOSH_GIT"/ci/gitlab-ci/* .gitlab-ci/
 sed -i "/project: 'guidog\/meta-phosh'/{n;s/'[0-9a-f]\+'/'$HASH'/}" .gitlab-ci.yml
 
 git add .gitlab-ci/* .gitlab-ci.yml
-git commit -m"ci: Update shared scripts to $SHORT"
+git commit -s -m"ci: Update shared scripts to $SHORT"
