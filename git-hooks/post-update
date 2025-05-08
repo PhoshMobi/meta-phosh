@@ -7,15 +7,17 @@
 # Author: Guido Günther <agx@sigxcpu.org>
 #
 # Build and install the package
-# Add as .git/hooks/post-update
+
+set -e
 
 [ "$1" = "refs/heads/next" ] || exit 0
-
-echo "Next branch, updating repo"
 
 export -n GIT_DIR
 
 cd ..
+PROJECT="$(basename "$PWD")"
+echo "Next branch of '$PROJECT', updating repo"
+
 git checkout -f next
 git status
 
@@ -34,4 +36,17 @@ dpkg-buildpackage -uc -us -rfakeroot -b
 
 sudo debi
 
-sudo systemctl restart greetd
+case $PROJECT in
+  # User session services that just respawn:
+  feedbackd|phosh-osk-stub)
+    echo "Restarting $PROJECT…"
+    killall "$PROJECT"
+    ;;
+  # Needs a session restart
+  phosh|phoc)
+    echo "Restarting session…"
+    systemctl restart greetd
+    ;;
+  *)
+    echo "Unknown project '$PROJECT', doing nothing"
+esac
