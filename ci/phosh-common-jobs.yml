@@ -124,7 +124,7 @@ variables:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       changes:
         paths:
-          - "**.build"
+          - "**/*.build"
 
 .phosh-check-repro:
   image: ${PHOSH_DOCKER_IMAGE}
