@@ -11,6 +11,19 @@ variables:
    export DEBIAN_FRONTEND=noninteractive
    apt-get -y update
    apt-get -y install eatmydata ${PHOSH_ADDITIONAL_PKGS}
+   if [ -n "${PHOSH_ADDITIONAL_SID_PKGS}" ]; then
+     echo "deb http://deb.debian.org/debian/ sid main" > /etc/apt/sources.list.d/sid.list
+     eatmydata apt-get update
+     echo "Fetching '${PHOSH_ADDITIONAL_SID_PKGS}' from sid"
+     apt-get -y install -t sid ${PHOSH_ADDITIONAL_SID_PKGS}
+   fi
+   if [ -n "${PHOSH_ADDITIONAL_EXPERIMENTAL_PKGS}" ]; then
+     echo "deb http://deb.debian.org/debian/ experimental main" > /etc/apt/sources.list.d/experimental.list
+     echo "deb http://deb.debian.org/debian/ sid main" > /etc/apt/sources.list.d/sid.list
+     eatmydata apt-get update
+     echo "Fetching '${PHOSH_ADDITIONAL_EXPERIMENTAL_PKGS}' from experimental"
+     apt-get -y install -t experimental ${PHOSH_ADDITIONAL_EXPERIMENTAL_PKGS}
+   fi
 
 .phosh-build-debian-package:
   image: ${PHOSH_DOCKER_IMAGE}
