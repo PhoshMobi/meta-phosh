@@ -38,7 +38,7 @@ sudo debi
 
 case $PROJECT in
   # User session services that just respawn:
-  feedbackd|phosh-osk-stub)
+  feedbackd|phosh-osk-stevia|phosh-osk-stub)
     echo "Restarting $PROJECT…"
     killall "$PROJECT"
     ;;
