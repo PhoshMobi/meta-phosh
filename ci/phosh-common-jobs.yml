@@ -79,6 +79,21 @@ variables:
           - debian/changelog
           - data/*.metainfo.xml.in*
 
+.phosh-check-g-style:
+  image: ${PHOSH_CHECK_DOCKER_IMAGE}
+  variables:
+    GCHECK_DIRS: .
+  needs: []
+  script:
+    - !reference [.phosh-prepare-apt]
+    - .gitlab-ci/g-style ${GCHECK_DIRS}
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        paths:
+          - "**/*.c"
+          - "**/*.h"
+
 .phosh-format-check:
   image: ${PHOSH_CHECK_DOCKER_IMAGE}
   needs: []

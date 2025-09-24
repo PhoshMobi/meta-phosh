@@ -8,6 +8,7 @@ SHELL_SCRIPTS = \
 	ci/gitlab-ci/check-consistency \
 	ci/gitlab-ci/check-po \
 	ci/gitlab-ci/check-meson \
+	ci/gitlab-ci/g-style \
         release-helpers/contributors \
         release-helpers/get-closed-bugs \
         release-helpers/phosh-release.sh \
