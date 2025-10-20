@@ -1,7 +1,7 @@
 ---
 variables:
   # Default image for common jobs
-  PHOSH_DOCKER_IMAGE: debian:trixie
+  PHOSH_DOCKER_IMAGE: debian:forky
   # Default image for check-* jobs
   PHOSH_CHECK_DOCKER_IMAGE: $CI_REGISTRY/world/phosh/phosh/ci-checks:v0.0.2025-10-20
   # For package builds
