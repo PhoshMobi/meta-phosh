@@ -14,7 +14,6 @@ import os
 import sys
 import subprocess
 
-TOKEN = os.getenv("GITLAB_TOKEN")
 NEWS_PATH = "./NEWS"
 
 
@@ -169,7 +168,7 @@ Detailed changes
         print(message)
         return
 
-    gl = gitlab.Gitlab(args.url, private_token=TOKEN)
+    gl = gitlab.Gitlab(args.url, private_token=gitlab_token)
     project = gl.projects.get(args.id)
     release = project.releases.create(
         {
