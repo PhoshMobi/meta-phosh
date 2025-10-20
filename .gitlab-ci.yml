@@ -17,7 +17,7 @@ workflow:
     - if: $CI_COMMIT_BRANCH
 
 check-scripts:
-  image: debian:trixie
+  image: debian:forky
   stage: scripts
   needs: []
   variables:
@@ -33,7 +33,7 @@ check-scripts:
     - make
 
 check-uncrustify:
-  image: debian:trixie
+  image: debian:forky
   stage: format
   needs: []
   variables:
