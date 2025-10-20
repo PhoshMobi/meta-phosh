@@ -2,6 +2,8 @@
 variables:
   # Default image for common jobs
   PHOSH_DOCKER_IMAGE: debian:trixie
+  # Default image for check-* jobs
+  PHOSH_CHECK_DOCKER_IMAGE: $CI_REGISTRY/world/phosh/phosh/ci-checks:v0.0.2025-10-20
   # For package builds
   PHOSH_PKG_GIT_SUBMODULE_UPDATE: 'true'
   PHOSH_PKG_OUTPUT_DIR: debian/output/
@@ -61,7 +63,7 @@ variables:
     - .gitlab-ci/check-po
 
 .phosh-check-consistency:
-  image: ${PHOSH_DOCKER_IMAGE}
+  image: ${PHOSH_CHECK_DOCKER_IMAGE}
   variables:
     PHOSH_ADDITIONAL_PKGS: dpkg-dev
   needs: []
@@ -78,7 +80,7 @@ variables:
           - data/*.metainfo.xml.in*
 
 .phosh-format-check:
-  image: ${PHOSH_DOCKER_IMAGE}
+  image: ${PHOSH_CHECK_DOCKER_IMAGE}
   needs: []
   variables:
     PHOSH_ADDITIONAL_PKGS: git python3 uncrustify
@@ -100,7 +102,7 @@ variables:
     - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME'
 
 .phosh-check-dist:
-  image: ${PHOSH_DOCKER_IMAGE}
+  image: ${PHOSH_CHECK_DOCKER_IMAGE}
   needs: []
   script:
     - !reference [.phosh-prepare-apt]
@@ -110,7 +112,7 @@ variables:
     - xvfb-run meson dist --include-subprojects -C _build-dist ${MESON_DIST_OPTIONS}
 
 .phosh-check-markdown:
-  image: ${PHOSH_DOCKER_IMAGE}
+  image: ${PHOSH_CHECK_DOCKER_IMAGE}
   variables:
     PHOSH_ADDITIONAL_PKGS: markdownlint
     PHOSH_MARKDOWN_PATHS: "*.md docs/*.md"
@@ -126,7 +128,7 @@ variables:
           - "docs/*.md"
 
 .phosh-check-meson:
-  image: ${PHOSH_DOCKER_IMAGE}
+  image: ${PHOSH_CHECK_DOCKER_IMAGE}
   variables:
     PHOSH_ADDITIONAL_PKGS: meson
   needs: []
@@ -140,7 +142,7 @@ variables:
           - "**/*.build"
 
 .phosh-check-repro:
-  image: ${PHOSH_DOCKER_IMAGE}
+  image: ${PHOSH_CHECK_DOCKER_IMAGE}
   needs: []
   variables:
     GIT_DEPTH: "1"
