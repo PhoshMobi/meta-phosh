@@ -10,7 +10,9 @@ SHELL_SCRIPTS = \
 	ci/gitlab-ci/check-meson \
         release-helpers/contributors \
         release-helpers/get-closed-bugs \
+        release-helpers/phosh-release.sh \
         release-helpers/prep-rel-branch \
+        release-helpers/rel-phosh-component \
         release-helpers/update-ci \
 	$(NULL)
 

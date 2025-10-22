@@ -1,0 +1,284 @@
+#!/bin/bash
+#
+# Copyright 2025 Phosh.mobi e.V.
+#
+# Author: Guido Günther <agx@sigxcpu.org>
+#
+# Release a phosh component
+#
+# It handles release candidates with ~rc1 versions and point releases on
+# <pkg>-<version> branches.
+#
+# ~/.config/phosh-release.ini#
+#
+# TODO: make is usable without `pass`
+
+set -e
+set -o pipefail
+#set -x
+
+# Git remote to push to
+GIT_REMOTE=
+# Host to upload to
+REMOTE_HOST=
+# gitlab token
+#GITLAB_TOKEN_PASS=
+
+# See meta-phosh's release helpers
+MK_GITLAB_REL=mk-gitlab-rel.py
+GITLAB_URL_PREFIX=https://gitlab.gnome.org/World/Phosh/
+GIT_TAG=1
+GIT_BRANCH=
+DIST_TESTS=1
+UPLOAD=1
+
+
+# '~' doesn't work so mangle to '_' as gbp does
+function git_version()
+{
+  local version="$1"
+
+  [ -n "$version" ] || exit 1
+  echo "${version//\~/_}"
+}
+
+# '~' doesn't work so mangle to '.'
+function meson_version()
+{
+  local version="$1"
+
+  [ -n "${version}" ] || exit 1
+  echo "${version//\~/.}"
+}
+
+
+function tag_git()
+{
+  local component="$1"
+  local version="$2"
+
+  if [ -n "${GIT_BRANCH}" ]; then
+    branch="${GIT_BRANCH}"
+  elif [[ "$version" =~ .*\.0 ]] || [[ "$version" =~ .*~(rc|alpha|beta) ]]; then
+    branch=main
+  else
+    branch=$(echo "$component-$version" | sed 's,\.\([0-9]\+\)$,.x,')
+    echo "Point release, using repo branch $branch"
+  fi
+
+  git co "${branch}"
+  git pull --ff-only
+  check-consistency
+  gbp tag
+
+  git_ver=$(git_version "$REL_VERSION")
+  git push "${GIT_REMOTE}" "v${git_ver}"
+  if git show rel-"${git_ver}" >& /dev/null; then
+    git branch -D rel-"${git_ver}"
+  fi
+}
+
+function mk_dist_tarball()
+{
+  local component="$1"
+  local version="$2"
+
+  if [ "${DIST_TESTS}" == 0 ]; then
+    MESON_DIST_OPTS="${MESON_DIST_OPTS} --no-tests"
+  fi
+
+  rm -rf _build-dist
+  # shellcheck disable=SC2086
+  meson setup ${MESON_DIST_SETUP_OPTIONS} _build-dist
+  # shellcheck disable=SC2086
+  meson dist --include-subprojects ${MESON_DIST_OPTS} -C _build-dist
+
+  meson_ver=$(meson_version "${version}")
+  cd _build-dist/meson-dist/
+  gpg --sign --armor -b "${component}-${meson_ver}.tar.xz"
+  cd -
+}
+
+function upload_dist_tarball()
+{
+  local component="$1"
+  local version="$2"
+  local meson_ver
+  local tarball
+
+  meson_ver=$(meson_version "${version}")
+  tarball="${component}-${meson_ver}.tar.xz"
+
+  cd _build-dist/meson-dist
+  for file in ${tarball}{,.asc,.sha256sum}; do
+    echo -e "put ${file}" | sftp "${REMOTE_HOST}:${component}/"
+  done
+  cd -
+}
+
+
+function mk_rel_notes()
+{
+  local component="$1"
+  local version="$2"
+  local id="$3"
+  local url="$4"
+  local tarballs="$5"
+
+  GITLAB_TOKEN=$(pass show "${GITLAB_TOKEN_PASS}") "${MK_GITLAB_REL}" -i "${id}" --url "${url}" --tarballs="${tarballs}"
+  sensible-browser "${GITLAB_URL_PREFIX}/${component}/-/releases/v${version}/edit"
+}
+
+
+function usage()
+{
+  cat <<EOF
+  $0 [--skip-tag] [-i <gitlab-project-id>] <version>
+
+  --skip-tag: Skip git tagging
+  --skip-tests: Skip tests during dist tarball generation
+  --skip-upload: Skip the tarball upload
+  --branch: Override automatic target branch detection
+  --repo-id|-i: Specify the project id
+EOF
+}
+
+
+while [ -n "$1" ]; do
+  case "$1" in
+    -h|--help)
+        usage
+        exit 0
+        ;;
+    -i|--repo-id)
+	shift
+	id="$1"
+	;;
+    --skip-tag)
+	GIT_TAG=0
+	;;
+    --branch)
+	shift
+	GIT_BRANCH="$1"
+        ;;
+    --skip-tests)
+        DIST_TESTS=0
+	;;
+    --skip-upload)
+        UPLOAD=0
+	;;
+    -*)
+        usage
+        exit 1
+        ;;
+    *)
+        break;
+  esac
+  shift
+done
+
+
+if [ -z "$1" ]; then
+  echo "No release version given"
+  exit 1
+fi
+REL_VERSION=$1
+
+COMPONENT=$(basename "$PWD")
+
+echo "Releasing $COMPONENT"
+
+if [ -f ~/.config/phosh-release.sh ]; then
+  # shellcheck source=release-helpers/phosh-release.sh
+  . ~/.config/phosh-release.sh
+fi
+
+# TODO: Use json data from mk-phosh-rel
+case ${COMPONENT} in
+   cellbroadcastd)
+       id=24940
+       GITLAB_URL_PREFIX=https://gitlab.freedesktop.org/devrtz/
+       TARBALLS=https://sources.phosh.mobi/releases/cellbroadcastd/
+       ;;
+   feedbackd)
+       id=24802
+       GITLAB_URL_PREFIX=https://gitlab.freedesktop.org/agx/
+       TARBALLS=https://sources.phosh.mobi/releases/feedbackd/
+       ;;
+   feedbackd-device-themes)
+       id=24803
+       GITLAB_URL_PREFIX=https://gitlab.freedesktop.org/agx/
+       TARBALLS=https://sources.phosh.mobi/releases/feedbackd-device-themes/
+       ;;
+   gmobile)
+       id=22559
+       TARBALLS=https://sources.phosh.mobi/releases/gmobile/
+       ;;
+   libcmatrix)
+       id=2415
+       GITLAB_URL_PREFIX=https://source.puri.sm/Librem5/
+       TARBALLS=https://sources.phosh.mobi/releases/libcmatrix/
+       ;;
+   livi)
+       id=27136
+       GITLAB_URL_PREFIX=https://gitlab.gnome.org/guidog/
+       ;;
+   phoc)
+       id=16763
+       TARBALLS=https://sources.phosh.mobi/releases/phoc/
+       ;;
+   phosh)
+       id=16747
+       TARBALLS=https://sources.phosh.mobi/releases/phosh/
+       ;;
+   phosh-mobile-settings)
+       id=21486
+       TARBALLS=https://sources.phosh.mobi/releases/phosh-mobile-settings/
+       ;;
+   phosh-tour)
+       id=22337
+       TARBALLS=https://sources.phosh.mobi/releases/phosh-tour/
+       ;;
+   phosh-osk-stevia)
+       id=19269
+       TARBALLS=https://sources.phosh.mobi/releases/phosh-osk-stevia/
+       ;;
+   phosh-osk-data)
+       id=25718
+       GITLAB_URL_PREFIX=https://gitlab.gnome.org/guidog/
+       echo "Releasing phosh component $component from a personal repo, consider moving it"
+       TARBALLS=https://sources.phosh.mobi/releases/phosh-osk-data/
+       ;;
+   phosh-wallpapers)
+       id=28270
+       GITLAB_URL_PREFIX=https://gitlab.gnome.org/guidog/
+       echo "Releasing phosh component $component from a personal repo, consider moving it"
+       TARBALLS=https://sources.phosh.mobi/releases/phosh-wallpapers/
+       ;;
+   xdg-desktop-portal-phosh)
+       id=29871
+       GITLAB_URL_PREFIX=https://gitlab.gnome.org/guidog/
+       TARBALLS=https://sources.phosh.mobi/releases/xdg-desktop-portal-phosh/
+esac
+
+if [ -z "${id}" ]; then
+  echo "No repo id given"
+  exit 1
+fi
+
+if [ "${GIT_TAG}" != "0" ]; then
+  tag_git "$COMPONENT" "$REL_VERSION"
+fi
+
+if [ "${UPLOAD}" != "0" ]; then
+  mk_dist_tarball "$COMPONENT" "$REL_VERSION"
+  upload_dist_tarball "$COMPONENT" "$REL_VERSION"
+fi
+
+if [[ "${REL_VERSION}" =~ '~rc' ]]; then
+  echo "Release candidate, skipping release notes"
+else
+  # shellcheck disable=SC2001
+  BASE_URL=$(echo $GITLAB_URL_PREFIX | sed 's,\(https://[^/]\+\)\(.*\),\1/,')
+  mk_rel_notes "$COMPONENT" "${REL_VERSION}" "${id}" "${BASE_URL}" "${TARBALLS}"
+fi
