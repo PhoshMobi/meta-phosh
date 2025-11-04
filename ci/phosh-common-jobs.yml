@@ -81,8 +81,6 @@ variables:
 
 .phosh-check-g-style:
   image: ${PHOSH_CHECK_DOCKER_IMAGE}
-  variables:
-    GCHECK_DIRS: .
   needs: []
   script:
     - !reference [.phosh-prepare-apt]
