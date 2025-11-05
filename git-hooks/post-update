@@ -38,9 +38,14 @@ sudo debi
 
 case $PROJECT in
   # User session services that just respawn:
-  feedbackd|phosh-osk-stevia|phosh-osk-stub)
+  feedbackd)
     echo "Restarting $PROJECT…"
     killall "$PROJECT"
+    ;;
+  # Graceful restart in session
+  *stevia)
+    echo "Restarting user unit…"
+    systemctl restart --user mobi.phosh.OSK.service
     ;;
   # Needs a session restart
   phosh|phoc)
