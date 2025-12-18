@@ -18,7 +18,7 @@ echo "Updating to $HASH"
 cp "$META_PHOSH_GIT"/ci/gitlab-ci/* .gitlab-ci/
 
 # Update ref
-sed -i "/project: 'guidog\/meta-phosh'/{n;s/'[0-9a-f]\+'/'$HASH'/}" .gitlab-ci.yml
+sed -i "/project: 'World\/Phosh\/meta-phosh'/{n;s/'[0-9a-f]\+'/'$HASH'/}" .gitlab-ci.yml
 
 git add .gitlab-ci/* .gitlab-ci.yml
 git commit -s -m"ci: Update shared scripts to $SHORT"
