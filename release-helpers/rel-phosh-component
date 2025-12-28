@@ -251,14 +251,12 @@ case ${COMPONENT} in
        ;;
    phosh-wallpapers)
        id=28270
-       GITLAB_URL_PREFIX=https://gitlab.gnome.org/guidog/
-       echo "Releasing phosh component $component from a personal repo, consider moving it"
        TARBALLS=https://sources.phosh.mobi/releases/phosh-wallpapers/
        ;;
    xdg-desktop-portal-phosh)
        id=29871
-       GITLAB_URL_PREFIX=https://gitlab.gnome.org/guidog/
        TARBALLS=https://sources.phosh.mobi/releases/xdg-desktop-portal-phosh/
+       ;;
 esac
 
 if [ -z "${id}" ]; then
