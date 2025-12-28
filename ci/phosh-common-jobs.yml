@@ -138,7 +138,7 @@ variables:
       changes:
         paths:
           - "*.md"
-          - "docs/*.md"
+          - "**/*.md"
 
 .phosh-check-meson:
   image: ${PHOSH_CHECK_DOCKER_IMAGE}
