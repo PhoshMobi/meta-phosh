@@ -224,6 +224,11 @@ case ${COMPONENT} in
        id=27136
        GITLAB_URL_PREFIX=https://gitlab.gnome.org/guidog/
        ;;
+   pfs)
+       id=33365
+       TARBALL=PhoshFileSelector
+       TARBALLS=https://sources.phosh.mobi/releases/pfs/
+       ;;
    phoc)
        id=16763
        TARBALLS=https://sources.phosh.mobi/releases/phoc/
