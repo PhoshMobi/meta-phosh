@@ -185,6 +185,7 @@ fi
 REL_VERSION=$1
 
 COMPONENT=$(basename "$PWD")
+TARBALL="${COMPONENT}"
 
 echo "Releasing $COMPONENT"
 
@@ -269,8 +270,8 @@ if [ "${GIT_TAG}" != "0" ]; then
 fi
 
 if [ "${UPLOAD}" != "0" ]; then
-  mk_dist_tarball "$COMPONENT" "$REL_VERSION"
-  upload_dist_tarball "$COMPONENT" "$REL_VERSION"
+  mk_dist_tarball "$TARBALL" "$REL_VERSION"
+  upload_dist_tarball "$TARBALL" "$REL_VERSION"
 fi
 
 if [[ "${REL_VERSION}" =~ '~rc' ]]; then
