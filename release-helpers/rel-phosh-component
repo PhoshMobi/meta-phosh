@@ -185,6 +185,7 @@ fi
 REL_VERSION=$1
 
 COMPONENT=$(basename "$PWD")
+TARBALL="${COMPONENT}"
 
 echo "Releasing $COMPONENT"
 
@@ -223,6 +224,11 @@ case ${COMPONENT} in
        id=27136
        GITLAB_URL_PREFIX=https://gitlab.gnome.org/guidog/
        ;;
+   pfs)
+       id=33365
+       TARBALL=PhoshFileSelector
+       TARBALLS=https://sources.phosh.mobi/releases/pfs/
+       ;;
    phoc)
        id=16763
        TARBALLS=https://sources.phosh.mobi/releases/phoc/
@@ -251,14 +257,12 @@ case ${COMPONENT} in
        ;;
    phosh-wallpapers)
        id=28270
-       GITLAB_URL_PREFIX=https://gitlab.gnome.org/guidog/
-       echo "Releasing phosh component $component from a personal repo, consider moving it"
        TARBALLS=https://sources.phosh.mobi/releases/phosh-wallpapers/
        ;;
    xdg-desktop-portal-phosh)
        id=29871
-       GITLAB_URL_PREFIX=https://gitlab.gnome.org/guidog/
        TARBALLS=https://sources.phosh.mobi/releases/xdg-desktop-portal-phosh/
+       ;;
 esac
 
 if [ -z "${id}" ]; then
@@ -271,8 +275,8 @@ if [ "${GIT_TAG}" != "0" ]; then
 fi
 
 if [ "${UPLOAD}" != "0" ]; then
-  mk_dist_tarball "$COMPONENT" "$REL_VERSION"
-  upload_dist_tarball "$COMPONENT" "$REL_VERSION"
+  mk_dist_tarball "$TARBALL" "$REL_VERSION"
+  upload_dist_tarball "$TARBALL" "$REL_VERSION"
 fi
 
 if [[ "${REL_VERSION}" =~ '~rc' ]]; then
