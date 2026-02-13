@@ -22,13 +22,13 @@ YAML = \
 	ci/phosh-common-jobs.yml \
 	$(NULL)
 
-test:
-	pytest
-
 all:
 	flake8 $(PYTHON_SCRIPTS)
 	shellcheck $(SHELL_SCRIPTS)
 	yamllint $(YAML)
+
+test:
+	pytest
 
 check-uncrustify:
 	uncrustify --check -c ci/gitlab-ci/uncrustify.cfg tests/uncrustify.c
