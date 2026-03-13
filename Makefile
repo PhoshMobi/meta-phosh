@@ -1,5 +1,6 @@
 PYTHON_SCRIPTS = \
 	ci/gitlab-ci/check-style.py \
+	ci/gitlab-ci/g-style.py \
 	release-helpers/announce-string-freeze \
 	release-helpers/mk-gitlab-rel.py \
 	$(NULL)	
@@ -8,7 +9,6 @@ SHELL_SCRIPTS = \
 	ci/gitlab-ci/check-consistency \
 	ci/gitlab-ci/check-po \
 	ci/gitlab-ci/check-meson \
-	ci/gitlab-ci/g-style \
         release-helpers/contributors \
         release-helpers/get-closed-bugs \
         release-helpers/phosh-release.sh \
@@ -22,13 +22,13 @@ YAML = \
 	ci/phosh-common-jobs.yml \
 	$(NULL)
 
-test:
-	pytest
-
 all:
 	flake8 $(PYTHON_SCRIPTS)
 	shellcheck $(SHELL_SCRIPTS)
 	yamllint $(YAML)
+
+test:
+	pytest
 
 check-uncrustify:
 	uncrustify --check -c ci/gitlab-ci/uncrustify.cfg tests/uncrustify.c

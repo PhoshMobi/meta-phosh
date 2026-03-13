@@ -82,9 +82,22 @@ variables:
 .phosh-check-g-style:
   image: ${PHOSH_CHECK_DOCKER_IMAGE}
   needs: []
+  variables:
+    PHOSH_ADDITIONAL_PKGS: git
+    GIT_DEPTH: "100"
   script:
     - !reference [.phosh-prepare-apt]
-    - .gitlab-ci/g-style ${GCHECK_DIRS}
+    - |
+      git remote add target $CI_MERGE_REQUEST_PROJECT_URL.git
+      echo "Fetching MR target branch $CI_MERGE_REQUEST_TARGET_BRANCH_NAME from $CI_MERGE_REQUEST_PROJECT_URL"
+      git fetch target "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
+      merge_base=$(git merge-base "target/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" HEAD)
+      if [ -z "$merge_base" ]; then
+        echo "Couldn't determine merge base"
+        exit 1
+      fi
+      echo "Merge base: $merge_base"
+      ./.gitlab-ci/g-style.py --sha $merge_base
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       changes:
