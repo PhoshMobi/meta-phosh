@@ -237,6 +237,11 @@ case ${COMPONENT} in
        id=16747
        TARBALLS=https://sources.phosh.mobi/releases/phosh/
        ;;
+   phosh-first-boot)
+       id=38831
+       TARBALL=PhoshFirstBoot
+       TARBALLS=https://sources.phosh.mobi/releases/phosh-first-boot/
+       ;;
    phosh-mobile-settings)
        id=21486
        TARBALLS=https://sources.phosh.mobi/releases/phosh-mobile-settings/
@@ -258,6 +263,10 @@ case ${COMPONENT} in
    phosh-wallpapers)
        id=28270
        TARBALLS=https://sources.phosh.mobi/releases/phosh-wallpapers/
+       ;;
+   syncbus)
+       id=38047
+       TARBALLS=https://sources.phosh.mobi/releases/syncbus/
        ;;
    xdg-desktop-portal-phosh)
        id=29871
