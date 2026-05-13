@@ -106,22 +106,29 @@ def main(argv):
         print("No project id")
         return 1
 
-    ret, version = subprocess.getstatusoutput("dpkg-parsechangelog -SVersion")
-    if ret:
-        print("Failed to get version from changelog", file=sys.stderr)
-        return 1
-    if version is None:
-        return 1
+    if os.path.exists("debian/changelog"):
+        ret, version = subprocess.getstatusoutput("dpkg-parsechangelog -SVersion")
+        if ret:
+            print("Failed to get version from changelog", file=sys.stderr)
+            return 1
+        if version is None:
+            return 1
 
-    since = get_since(version)
-    ret, changes = subprocess.getstatusoutput(f"dpkg-parsechangelog -SChanges --since {since}")
-    if ret:
-        print("Failed to get debian/changelog changes", file=sys.stderr)
-        return 1
-    ret, source = subprocess.getstatusoutput("dpkg-parsechangelog -SSource")
-    if ret:
-        print("Failed to get source package ", file=sys.stderr)
-        return 1
+        since = get_since(version)
+        ret, changes = subprocess.getstatusoutput(f"dpkg-parsechangelog -SChanges --since {since}")
+        if ret:
+            print("Failed to get debian/changelog changes", file=sys.stderr)
+            return 1
+        ret, source = subprocess.getstatusoutput("dpkg-parsechangelog -SSource")
+        if ret:
+            print("Failed to get source package ", file=sys.stderr)
+            return 1
+    else:
+        print("No packaging, skipping changelog", file=sys.stderr)
+        # We don't know the project type so just use the directory
+        source = os.path.basename(os.path.abspath(os.path.curdir))
+        changes = '[ not documented ]'
+
     ret, tag = subprocess.getstatusoutput("git describe HEAD")
     if ret:
         print("Failed to describe HEAD", file=sys.stderr)
