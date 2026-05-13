@@ -69,7 +69,11 @@ function tag_git()
   git co "${branch}"
   git pull --ff-only
   check-consistency
-  gbp tag
+  if [ -f debian/changelog ]; then
+    gbp tag
+  else
+    git tag -s -m "${component} ${REL_VERSION}" "v${REL_VERSION}"
+  fi
 
   git_ver=$(git_version "$REL_VERSION")
   git push "${GIT_REMOTE}" "v${git_ver}"
