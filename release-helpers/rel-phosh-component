@@ -69,7 +69,11 @@ function tag_git()
   git co "${branch}"
   git pull --ff-only
   check-consistency
-  gbp tag
+  if [ -f debian/changelog ]; then
+    gbp tag
+  else
+    git tag -s -m "${component} ${REL_VERSION}" "v${REL_VERSION}"
+  fi
 
   git_ver=$(git_version "$REL_VERSION")
   git push "${GIT_REMOTE}" "v${git_ver}"
@@ -237,6 +241,11 @@ case ${COMPONENT} in
        id=16747
        TARBALLS=https://sources.phosh.mobi/releases/phosh/
        ;;
+   phosh-first-boot)
+       id=38831
+       TARBALL=PhoshFirstBoot
+       TARBALLS=https://sources.phosh.mobi/releases/phosh-first-boot/
+       ;;
    phosh-mobile-settings)
        id=21486
        TARBALLS=https://sources.phosh.mobi/releases/phosh-mobile-settings/
@@ -258,6 +267,10 @@ case ${COMPONENT} in
    phosh-wallpapers)
        id=28270
        TARBALLS=https://sources.phosh.mobi/releases/phosh-wallpapers/
+       ;;
+   syncbus)
+       id=38047
+       TARBALLS=https://sources.phosh.mobi/releases/syncbus/
        ;;
    xdg-desktop-portal-phosh)
        id=29871

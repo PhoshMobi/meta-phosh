@@ -18,8 +18,8 @@ NEWS_PATH = "./NEWS"
 
 
 def parse_news(filename, version):
-    news = ''
-    ui_translations = ''
+    news = ""
+    ui_translations = ""
 
     with open(filename) as f:
         line = f.readline()
@@ -31,7 +31,7 @@ def parse_news(filename, version):
         in_ui = False
         for line in f:
             # Skip until first bullet point
-            if in_header and line[0] != '*':
+            if in_header and line[0] != "*":
                 continue
             else:
                 in_header = False
@@ -39,7 +39,7 @@ def parse_news(filename, version):
             if line.startswith("* UI translations"):
                 in_ui = True
 
-            if line.strip() == '':
+            if line.strip() == "":
                 break
 
             if in_ui:
@@ -64,9 +64,9 @@ def get_since(version):
     '1.0.0'
     """
     # For alpha, beta, etc we don't include any prior releases
-    if '~' in version:
+    if "~" in version:
         return version
-    (major, minor, micro) = [int(x) for x in version.split('.')]
+    major, minor, micro = [int(x) for x in version.split(".")]
     # Bug fix releases
     if (major != 0 or minor != 0) and micro != 0:
         micro -= 1
@@ -81,20 +81,26 @@ def get_since(version):
 
 
 def main(argv):
-    parser = argparse.ArgumentParser(os.path.basename(argv[0]),
-                                     description='''Make a release''')
-    parser.add_argument('-i', '--project-id', dest='id',
-                        help='The repo id',
-                        type=int)
-    parser.add_argument('--url', dest='url',
-                        default="https://gitlab.gnome.org",
-                        help='The repo id',
-                        type=str)
-    parser.add_argument('--tarballs', dest='tarballs',
-                        help='Location of signed release tarballs',
-                        type=str)
-    parser.add_argument('--dry-run', action=argparse.BooleanOptionalAction,
-                        help="Parse, don't publish")
+    parser = argparse.ArgumentParser(
+        os.path.basename(argv[0]), description="""Make a release"""
+    )
+    parser.add_argument("-i", "--project-id", dest="id", help="The repo id", type=int)
+    parser.add_argument(
+        "--url",
+        dest="url",
+        default="https://gitlab.gnome.org",
+        help="The repo id",
+        type=str,
+    )
+    parser.add_argument(
+        "--tarballs",
+        dest="tarballs",
+        help="Location of signed release tarballs",
+        type=str,
+    )
+    parser.add_argument(
+        "--dry-run", action=argparse.BooleanOptionalAction, help="Parse, don't publish"
+    )
     args = parser.parse_args(argv[1:])
 
     gitlab_token = os.getenv("GITLAB_TOKEN")
@@ -106,38 +112,47 @@ def main(argv):
         print("No project id")
         return 1
 
-    ret, version = subprocess.getstatusoutput("dpkg-parsechangelog -SVersion")
-    if ret:
-        print("Failed to get version from changelog", file=sys.stderr)
-        return 1
-    if version is None:
-        return 1
+    if os.path.exists("debian/changelog"):
+        ret, version = subprocess.getstatusoutput("dpkg-parsechangelog -SVersion")
+        if ret:
+            print("Failed to get version from changelog", file=sys.stderr)
+            return 1
+        if version is None:
+            return 1
 
-    since = get_since(version)
-    ret, changes = subprocess.getstatusoutput(f"dpkg-parsechangelog -SChanges --since {since}")
-    if ret:
-        print("Failed to get debian/changelog changes", file=sys.stderr)
-        return 1
-    ret, source = subprocess.getstatusoutput("dpkg-parsechangelog -SSource")
-    if ret:
-        print("Failed to get source package ", file=sys.stderr)
-        return 1
+        since = get_since(version)
+        ret, changes = subprocess.getstatusoutput(
+            f"dpkg-parsechangelog -SChanges --since {since}"
+        )
+        if ret:
+            print("Failed to get debian/changelog changes", file=sys.stderr)
+            return 1
+        ret, source = subprocess.getstatusoutput("dpkg-parsechangelog -SSource")
+        if ret:
+            print("Failed to get source package ", file=sys.stderr)
+            return 1
+    else:
+        print("No packaging, skipping changelog", file=sys.stderr)
+        # We don't know the project type so just use the directory
+        source = os.path.basename(os.path.abspath(os.path.curdir))
+        changes = "[ not documented ]"
+
     ret, tag = subprocess.getstatusoutput("git describe HEAD")
     if ret:
         print("Failed to describe HEAD", file=sys.stderr)
         return 1
-    if not tag or ' ' in tag:
+    if not tag or " " in tag:
         print(f"Can't get tag: {tag}")
         return 1
 
-    version = tag.replace('_', '~')
-    if version.startswith('v'):
+    version = tag.replace("_", "~")
+    if version.startswith("v"):
         version = version[1:]
 
     print(f"Releasing {tag}, version: {version} on {args.url}")
 
-    news = ''
-    translations = ''
+    news = ""
+    translations = ""
     if os.path.exists(NEWS_PATH):
         news, translations = parse_news(NEWS_PATH, version)
 
@@ -147,7 +162,7 @@ i18n updates
 ============
 {translations}
 """
-    notes = ''
+    notes = ""
     if os.path.exists(".git/notes"):
         with open(".git/notes") as f:
             notes = f.read()
@@ -172,10 +187,11 @@ Detailed changes
     project = gl.projects.get(args.id)
     release = project.releases.create(
         {
-            'name': name,
-            'tag_name': tag,
-            'description': message,
-        })
+            "name": name,
+            "tag_name": tag,
+            "description": message,
+        }
+    )
 
     if args.tarballs and len(args.tarballs):
         release.links.create({"url": args.tarballs, "name": "Signed release tarballs"})
@@ -183,5 +199,5 @@ Detailed changes
     return 0
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main(sys.argv))
