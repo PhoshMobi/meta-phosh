@@ -264,13 +264,13 @@ case ${COMPONENT} in
        echo "Releasing phosh component $component from a personal repo, consider moving it"
        TARBALLS=https://sources.phosh.mobi/releases/phosh-osk-data/
        ;;
+   phosh-session-services)
+       id=38047
+       TARBALLS=https://sources.phosh.mobi/releases/phosh-session-services/
+       ;;
    phosh-wallpapers)
        id=28270
        TARBALLS=https://sources.phosh.mobi/releases/phosh-wallpapers/
-       ;;
-   syncbus)
-       id=38047
-       TARBALLS=https://sources.phosh.mobi/releases/syncbus/
        ;;
    xdg-desktop-portal-phosh)
        id=29871
