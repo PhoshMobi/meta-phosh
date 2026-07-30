@@ -145,7 +145,7 @@ variables:
   needs: []
   script:
     - !reference [.phosh-prepare-apt]
-    - mdl $PHOSH_MARKDOWN_PATHS
+    - mdl $PHOSH_MARKDOWN_OPTS $PHOSH_MARKDOWN_PATHS
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       changes:
