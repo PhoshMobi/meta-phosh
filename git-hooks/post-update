@@ -50,7 +50,7 @@ case $PROJECT in
   # Needs a session restart
   phosh|phoc)
     echo "Restarting session…"
-    systemctl restart greetd
+    loginctl terminate-session $(loginctl --no-legend | awk '/seat0 / { print $1 }')
     ;;
   *)
     echo "Unknown project '$PROJECT', doing nothing"
