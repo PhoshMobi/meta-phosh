@@ -3,6 +3,7 @@ PYTHON_SCRIPTS = \
 	ci/gitlab-ci/g-style.py \
 	release-helpers/announce-string-freeze \
 	release-helpers/mk-gitlab-rel.py \
+	release-helpers/update-metainfo.py \
 	$(NULL)	
 
 SHELL_SCRIPTS = \
