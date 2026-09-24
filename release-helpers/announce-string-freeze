@@ -45,6 +45,8 @@ The freeze affects the following components:
 
 - phosh: [repo](https://gitlab.gnome.org/World/Phosh/phosh), [l10n](https://l10n.gnome.org/module/phosh/)
 - phosh-mobile-settings: [repo](https://gitlab.gnome.org/World/Phosh/phosh-mobile-settings), [l10n](https://l10n.gnome.org/module/phosh-mobile-settings/)
+- phosh-osk-stevia [repo](https://gitlab.gnome.org/World/Phosh/stevia),
+  [l10n](https://l10n.gnome.org/module/stevia/)
 - phosh-tour: [repo](https://gitlab.gnome.org/World/Phosh/phosh-tour), [l10n](https://l10n.gnome.org/module/phosh-tour/)
 
 Thanks a lot for the translations in {prev_release}!
