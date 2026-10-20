@@ -222,8 +222,7 @@ case ${COMPONENT} in
        TARBALLS=https://sources.phosh.mobi/releases/gmobile/
        ;;
    libcmatrix)
-       id=2415
-       GITLAB_URL_PREFIX=https://source.puri.sm/Librem5/
+       id=41079
        TARBALLS=https://sources.phosh.mobi/releases/libcmatrix/
        ;;
    livi)
