@@ -209,12 +209,12 @@ case ${COMPONENT} in
        ;;
    feedbackd)
        id=24802
-       GITLAB_URL_PREFIX=https://gitlab.freedesktop.org/agx/
+       GITLAB_URL_PREFIX=https://gitlab.freedesktop.org/feedbackd/
        TARBALLS=https://sources.phosh.mobi/releases/feedbackd/
        ;;
    feedbackd-device-themes)
        id=24803
-       GITLAB_URL_PREFIX=https://gitlab.freedesktop.org/agx/
+       GITLAB_URL_PREFIX=https://gitlab.freedesktop.org/feedbackd/
        TARBALLS=https://sources.phosh.mobi/releases/feedbackd-device-themes/
        ;;
    gmobile)
