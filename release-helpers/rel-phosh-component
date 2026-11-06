@@ -292,8 +292,8 @@ if [ "${UPLOAD}" != "0" ]; then
   upload_dist_tarball "$TARBALL" "$REL_VERSION"
 fi
 
-if [[ "${REL_VERSION}" =~ '~rc' ]]; then
-  echo "Release candidate, skipping release notes"
+if [[ "${REL_VERSION}" =~ '~rc' || "${REL_VERSION}" =~ '~beta' || "${REL_VERSION}" =~ '~alpha' ]]; then
+  echo "Pre-release or release candidate, skipping release notes"
 else
   # shellcheck disable=SC2001
   BASE_URL=$(echo $GITLAB_URL_PREFIX | sed 's,\(https://[^/]\+\)\(.*\),\1/,')
