@@ -9,7 +9,9 @@
 # It handles release candidates with ~rc1 versions and point releases on
 # <pkg>-<version> branches.
 #
-# ~/.config/phosh-release.ini#
+# ~/.config/phosh-release.ini
+#
+# is sourced to determine the gitlab token to create releases
 #
 # TODO: make is usable without `pass`
 
@@ -207,12 +209,12 @@ case ${COMPONENT} in
        ;;
    feedbackd)
        id=24802
-       GITLAB_URL_PREFIX=https://gitlab.freedesktop.org/agx/
+       GITLAB_URL_PREFIX=https://gitlab.freedesktop.org/feedbackd/
        TARBALLS=https://sources.phosh.mobi/releases/feedbackd/
        ;;
    feedbackd-device-themes)
        id=24803
-       GITLAB_URL_PREFIX=https://gitlab.freedesktop.org/agx/
+       GITLAB_URL_PREFIX=https://gitlab.freedesktop.org/feedbackd/
        TARBALLS=https://sources.phosh.mobi/releases/feedbackd-device-themes/
        ;;
    gmobile)
@@ -220,8 +222,7 @@ case ${COMPONENT} in
        TARBALLS=https://sources.phosh.mobi/releases/gmobile/
        ;;
    libcmatrix)
-       id=2415
-       GITLAB_URL_PREFIX=https://source.puri.sm/Librem5/
+       id=41079
        TARBALLS=https://sources.phosh.mobi/releases/libcmatrix/
        ;;
    livi)
